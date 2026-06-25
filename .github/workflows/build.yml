@@ -19,8 +19,15 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: 设置 Gradle
-        uses: gradle/actions/setup-gradle@v3
+      - name: 安装 Gradle
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq wget unzip
+          wget -q https://services.gradle.org/distributions/gradle-8.5-bin.zip
+          sudo unzip -q gradle-8.5-bin.zip -d /opt
+          echo "/opt/gradle-8.5/bin" >> $GITHUB_PATH
+
+      - name: 生成 Gradle Wrapper
+        run: gradle wrapper
 
       - name: 编译 APK
         run: ./gradlew assembleRelease
